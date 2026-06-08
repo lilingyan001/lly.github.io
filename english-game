@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>三年级英语 Unit1 单词闯关 · 帮小动物找家</title>
+<style>
+  /* ========== 全局基础样式 ========== */
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    height: 100%;
+    font-family: "Comic Sans MS", "华文圆体", "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 50%, #74b9ff 100%);
+    overflow-x: hidden;
+    color: #2d3436;
+  }
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px 10px;
+    min-height: 100vh;
+  }
+
+  /* ========== 游戏主容器 ========== */
+  .game-wrapper {
+    width: 100%;
+    max-width: 960px;
+    background: #fff;
+    border-radius: 30px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+    padding: 30px 25px;
+    position: relative;
+    overflow: hidden;
+    border: 6px solid #ffeaa7;
+  }
+
+  /* 顶部信息栏 */
+  .top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .title {
+    font-size: 28px;
+    font-weight: bold;
+    color: #e17055;
+    text-shadow: 2px 2px 0 #ffeaa7;
+  }
+  .score-box {
+    background: linear-gradient(45deg, #fdcb6e, #fab1a0);
+    color: #fff;
+    padding: 10px 22px;
+    border-radius: 25px;
+    font-size: 22px;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(225,112,85,0.3);
+  }
+  .level-box {
+    background: linear-gradient(45deg, #74b9ff, #a29bfe);
+    color: #fff;
+    padding: 10px 22px;
+    border-radius: 25px;
+    font-size: 20px;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(116,185,255,0.3);
+  }
+
+  /* 进度条 */
+  .progress-bar {
+    width: 100%;
+    height: 18px;
+    background: #dfe6e9;
+    border-radius: 15px;
+    overflow: hidden;
+    margin-bottom: 25px;
+    position: relative;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #55efc4, #00cec9, #74b9ff);
+    width: 10%;
+    transition: width 0.6s ease;
+    border-radius: 15px;
+  }
+
+  /* ========== 开始页面 ========== */
+  .start-screen, .win-screen {
+    text-align: center;
+    padding: 40px 20px;
+  }
+  .big-emoji {
+    font-size: 120px;
+    display: block;
+    margin-bottom: 20px;
+    animation: bounceIn 1.2s ease infinite alternate;
+  }
+  .welcome-title {
+    font-size: 40px;
+    color: #e17055;
+    margin-bottom: 15px;
+    text-shadow: 3px 3px 0 #ffeaa7;
+  }
+  .welcome-desc {
+    font-size: 20px;
+    color: #636e72;
+    margin-bottom: 30px;
+    line-height: 1.6;
+  }
+
+  /* 卡通按钮 */
+  .cartoon-btn {
+    background: linear-gradient(45deg, #ff7675, #fd79a8);
+    color: #fff;
+    border: none;
+    padding: 16px 45px;
+    font-size: 26px;
+    font-weight: bold;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 6px 0 #d63031, 0 10px 20px rgba(0,0,0,0.2);
+    transition: all 0.15s ease;
+    font-family: inherit;
+  }
+  .cartoon-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 0 #d63031, 0 14px 25px rgba(0,0,0,0.25); }
+  .cartoon-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #d63031, 0 4px 10px rgba(0,0,0,0.15); }
+
+  /* ========== 关卡内容 ========== */
+  .level-screen { display: none; animation: fadeIn 0.5s ease; }
+  .level-screen.active { display: block; }
+
+  .character-area {
+    text-align: center;
+    padding: 20px 10px;
+    position: relative;
+    min-height: 200px;
+  }
+  .character {
+    font-size: 130px;
+    display: inline-block;
+    line-height: 1;
+    transition: transform 0.3s ease;
+    position: relative;
+    z-index: 2;
+  }
+  .character-name {
+    font-size: 22px;
+    color: #6c5ce7;
+    font-weight: bold;
+    margin-top: 10px;
+  }
+
+  /* 题目气泡 */
+  .question-bubble {
+    background: linear-gradient(135deg, #a29bfe, #74b9ff);
+    color: #fff;
+    padding: 20px 25px;
+    border-radius: 25px;
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center;
+    margin: 15px auto;
+    position: relative;
+    max-width: 90%;
+    box-shadow: 0 5px 15px rgba(162,155,254,0.4);
+    line-height: 1.5;
+  }
+  .question-bubble::before {
+    content: "";
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 15px solid transparent;
+    border-bottom-color: #a29bfe;
+  }
+
+  /* 选项按钮 */
+  .options-area {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+    margin: 25px 10px;
+  }
+  .option-btn {
+    background: linear-gradient(135deg, #fff5e1, #ffeaa7);
+    border: 4px solid #fdcb6e;
+    padding: 18px 25px;
+    font-size: 22px;
+    font-weight: bold;
+    border-radius: 20px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s ease;
+    color: #2d3436;
+    font-family: inherit;
+    box-shadow: 0 4px 0 #e17055;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  .option-letter {
+    background: #ff7675;
+    color: #fff;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    flex-shrink: 0;
+    box-shadow: 0 3px 0 #d63031;
+  }
+  .option-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 7px 0 #e17055, 0 10px 20px rgba(0,0,0,0.15);
+    border-color: #ff7675;
+  }
+  .option-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #e17055; }
+  .option-btn.correct {
+    background: linear-gradient(135deg, #55efc4, #00cec9);
+    border-color: #00b894;
+    color: #fff;
+    animation: correctPulse 0.6s ease;
+  }
+  .option-btn.wrong {
+    background: linear-gradient(135deg, #fab1a0, #e17055);
+    border-color: #d63031;
+    color: #fff;
+    animation: shake 0.5s ease;
+  }
+  .option-btn:disabled { cursor: not-allowed; }
+
+  /* 下一关按钮 */
+  .next-btn-area {
+    text-align: center;
+    margin-top: 20px;
+    display: none;
+  }
+  .next-btn-area.show { display: block; animation: fadeIn 0.5s ease; }
+
+  /* 反馈文字提示 */
+  .feedback {
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+    padding: 10px;
+    min-height: 40px;
+    margin-top: 15px;
+  }
+  .feedback.correct { color: #00b894; }
+  .feedback.wrong { color: #d63031; }
+
+  /* ========== 动画效果区 ========== */
+  .animation-area {
+    position: absolute;
+    pointer-events: none;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    z-index: 3;
+  }
+
+  /* 金色星星动画 */
+  .gold-star {
+    position: absolute;
+    font-size: 40px;
+    animation: starFloat 1.5s ease-out forwards;
+  }
+
+  /* 彩色烟花动画 */
+  .firework {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    animation: fireworkFly 1.2s ease-out forwards;
+  }
+
+  /* 爱心闪烁 */
+  .heart-pop {
+    position: absolute;
+    font-size: 35px;
+    animation: heartBlink 1.5s ease-out forwards;
+  }
+
+  /* 加油气泡 */
+  .cheer-bubble {
+    position: absolute;
+    background: #fff;
+    border: 4px solid #fab1a0;
+    color: #e17055;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 22px;
+    font-weight: bold;
+    animation: bubblePop 1.5s ease-out forwards;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    z-index: 4;
+  }
+
+  /* 皇冠动画 */
+  .crown-float {
+    position: absolute;
+    font-size: 60px;
+    animation: crownBounce 1.5s ease-in-out;
+  }
+
+  /* 竹叶飘落 */
+  .leaf-fall {
+    position: absolute;
+    font-size: 30px;
+    animation: leafFall 2s ease-in forwards;
+  }
+
+  /* 竹子生长 */
+  .bamboo-grow {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 80px;
+    animation: bambooGrow 1.5s ease-out;
+  }
+
+  /* 彩纸 */
+  .confetti {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    animation: confettiFall 2s ease-in forwards;
+  }
+
+  /* 奖杯发光 */
+  .trophy-glow {
+    display: inline-block;
+    animation: trophyGlow 2s ease-in-out infinite alternate;
+  }
+
+  /* 动画关键帧 */
+  @keyframes bounceIn {
+    from { transform: translateY(0) scale(1); }
+    to { transform: translateY(-15px) scale(1.05); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes correctPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+  }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+  }
+  @keyframes starFloat {
+    0% { opacity: 1; transform: translate(0,0) rotate(0) scale(0.5); }
+    100% { opacity: 0; transform: translate(var(--tx), var(--ty)) rotate(360deg) scale(1.5); }
+  }
+  @keyframes fireworkFly {
+    0% { opacity: 1; transform: translate(0,0) scale(0.5); }
+    100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(1.5); }
+  }
+  @keyframes heartBlink {
+    0% { opacity: 0; transform: translate(0,0) scale(0.5); }
+    50% { opacity: 1; transform: translate(var(--tx), var(--ty)) scale(1.2); }
+    100% { opacity: 0; transform: translate(calc(var(--tx) * 1.5), calc(var(--ty) - 50px)) scale(1); }
+  }
+  @keyframes bubblePop {
+    0% { opacity: 0; transform: scale(0.5) translateY(20px); }
+    30% { opacity: 1; transform: scale(1.15) translateY(-10px); }
+    70% { opacity: 1; transform: scale(1) translateY(-10px); }
+    100% { opacity: 0; transform: scale(0.8) translateY(-30px); }
+  }
+  @keyframes crownBounce {
+    0% { opacity: 0; transform: translateY(-80px) scale(0.3); }
+    50% { opacity: 1; transform: translateY(0) scale(1.3); }
+    70% { transform: translateY(-15px) scale(1); }
+    100% { opacity: 0; transform: translateY(-30px) scale(1); }
+  }
+  @keyframes leafFall {
+    0% { opacity: 1; transform: translate(0,0) rotate(0); }
+    100% { opacity: 0; transform: translate(var(--tx), 400px) rotate(720deg); }
+  }
+  @keyframes bambooGrow {
+    0% { opacity: 0; transform: translateX(-50%) scaleY(0.1); transform-origin: bottom; }
+    100% { opacity: 1; transform: translateX(-50%) scaleY(1); transform-origin: bottom; }
+  }
+  @keyframes confettiFall {
+    0% { opacity: 1; transform: translate(0,0) rotate(0); }
+    100% { opacity: 0; transform: translate(var(--tx), 600px) rotate(720deg); }
+  }
+  @keyframes trophyGlow {
+    from { transform: scale(1) rotate(-5deg); filter: drop-shadow(0 0 10px gold); }
+    to { transform: scale(1.1) rotate(5deg); filter: drop-shadow(0 0 30px gold); }
+  }
+  @keyframes characterJump {
+    0%, 100% { transform: translateY(0) rotate(0); }
+    50% { transform: translateY(-30px) rotate(-5deg); }
+  }
+  @keyframes spinCircle {
+    0% { transform: rotate(0) scale(1); }
+    50% { transform: rotate(180deg) scale(1.2); }
+    100% { transform: rotate(360deg) scale(1); }
+  }
+  @keyframes runAcross {
+    0% { transform: translateX(-150px); }
+    50% { transform: translateX(0); }
+    100% { transform: translateX(150px); }
+  }
+  @keyframes waveHand {
+    0%, 100% { transform: rotate(0); }
+    50% { transform: rotate(20deg); }
+  }
+
+  /* 角色动作类 */
+  .char-jump { animation: characterJump 0.6s ease 2; }
+  .char-spin { animation: spinCircle 1s ease; }
+  .char-wave { animation: waveHand 0.4s ease 4; display: inline-block; transform-origin: bottom center; }
+  .char-run { animation: runAcross 1.5s ease; }
+  .char-cheer { animation: characterJump 0.5s ease infinite; }
+
+  /* ========== 胜利页面 ========== */
+  .win-screen { display: none; }
+  .win-screen.active { display: block; animation: fadeIn 0.8s ease; }
+  .win-title {
+    font-size: 42px;
+    color: #e17055;
+    margin: 20px 0;
+    text-shadow: 3px 3px 0 #ffeaa7;
+  }
+  .final-score {
+    font-size: 30px;
+    color: #00b894;
+    margin: 20px 0;
+    font-weight: bold;
+  }
+  .cheer-characters {
+    font-size: 60px;
+    margin: 25px 0;
+    line-height: 1.8;
+  }
+  .cheer-characters span {
+    display: inline-block;
+    animation: characterJump 0.8s ease infinite;
+    margin: 0 8px;
+  }
+  .cheer-characters span:nth-child(2n) { animation-delay: 0.2s; }
+  .cheer-characters span:nth-child(3n) { animation-delay: 0.4s; }
+
+  .win-message {
+    font-size: 22px;
+    color: #636e72;
+    line-height: 1.8;
+    background: linear-gradient(135deg, #fff5e1, #ffeaa7);
+    padding: 25px;
+    border-radius: 20px;
+    border: 4px dashed #fdcb6e;
+    margin: 20px 0;
+  }
+
+  /* ========== 小屏适配 ========== */
+  @media (max-width: 600px) {
+    .title { font-size: 22px; }
+    .score-box, .level-box { font-size: 16px; padding: 8px 15px; }
+    .big-emoji { font-size: 80px; }
+    .welcome-title { font-size: 30px; }
+    .welcome-desc { font-size: 16px; }
+    .cartoon-btn { font-size: 20px; padding: 12px 30px; }
+    .character { font-size: 90px; }
+    .question-bubble { font-size: 18px; padding: 15px; }
+    .option-btn { font-size: 18px; padding: 14px 18px; }
+    .option-letter { width: 38px; height: 38px; font-size: 20px; }
+    .feedback { font-size: 18px; }
+    .win-title { font-size: 30px; }
+    .final-score { font-size: 22px; }
+    .cheer-characters { font-size: 45px; }
+    .win-message { font-size: 18px; padding: 18px; }
+    .game-wrapper { padding: 20px 15px; border-radius: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="game-wrapper">
+  <!-- 顶部标题和分数 -->
+  <div class="top-bar">
+    <div class="title">🌈 帮小动物找家 🌈</div>
+    <div class="level-box">关卡: <span id="levelText">1/10</span></div>
+    <div class="score-box">⭐ 得分: <span id="scoreText">0</span></div>
+  </div>
+
+  <!-- 进度条 -->
+  <div class="progress-bar">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+
+  <!-- 开始页面 -->
+  <div class="start-screen" id="startScreen">
+    <span class="big-emoji">🐱🐻🦁🐼</span>
+    <h1 class="welcome-title">三年级英语 Unit1 单词闯关</h1>
+    <p class="welcome-desc">
+      小朋友，你好呀！👋<br>
+      小动物们迷路啦，快来帮它们找到自己的家吧！<br>
+      一共 10 关，每答对一题可以获得 ⭐ 星星奖励哦～<br>
+      准备好了吗？让我们开始闯关吧！
+    </p>
+    <button class="cartoon-btn" id="startBtn">🚀 开始闯关</button>
+  </div>
+
+  <!-- 关卡页面 -->
+  <div class="level-screen" id="levelScreen">
+    <div class="character-area">
+      <span class="character" id="character">🐱</span>
+      <div class="character-name" id="characterName">英国小猫咪</div>
+    </div>
+
+    <div class="question-bubble" id="questionBubble">
+      小猫咪举着"UK"卡片问："我来自哪个国家呀？"
+    </div>
+
+    <div class="options-area" id="optionsArea"></div>
+
+    <div class="feedback" id="feedback"></div>
+
+    <div class="next-btn-area" id="nextBtnArea">
+      <button class="cartoon-btn" id="nextBtn">下一关 ➡️</button>
+    </div>
+  </div>
+
+  <!-- 通关页面 -->
+  <div class="win-screen" id="winScreen">
+    <span class="big-emoji trophy-glow">🏆</span>
+    <h1 class="win-title">🎉 恭喜通关啦！🎉</h1>
+    <div class="final-score">最终得分: <span id="finalScore">0</span> ⭐</div>
+    <div class="cheer-characters" id="cheerChars"></div>
+    <div class="win-message">
+      🌟 通关寄语 🌟<br><br>
+      亲爱的小朋友，你真是太棒啦！👏<br>
+      你成功帮助所有小动物找到了家，<br>
+      也学会了好多英语单词和句子！<br>
+      <b>UK</b> 是英国 🇬🇧，<b>Canada</b> 是加拿大 🇨🇦，<br>
+      <b>USA</b> 是美国 🇺🇸，<b>China</b> 是中国 🇨🇳，<br>
+      还会用 <b>I'm from China.</b> 介绍自己啦！<br>
+      继续加油，成为英语小超人吧！💪
+    </div>
+    <button class="cartoon-btn" id="restartBtn">🔄 再玩一次</button>
+  </div>
+
+  <!-- 动画层 -->
+  <div class="animation-area" id="animationArea"></div>
+</div>
+
+<script>
+  // ========== 关卡数据 ==========
+  // 每关包含: 角色(emoji)、角色名、题目、选项、正确答案、答题反馈
+  const levels = [
+    {
+      char: "🐱", name: "英国小猫咪",
+      question: '小猫咪举着 "UK" 卡片问："我来自哪个国家呀？"',
+      options: ["A. 英国", "B. 加拿大", "C. 美国"],
+      correct: 0,
+      rightVoice: "太棒啦！你帮小猫咪找到家了～",
+      wrongVoice: '没关系哦～"UK" 是英国的缩写，再想想看？下次一定能答对！',
+      rightAnim: "stars", wrongAnim: "hearts", charAction: "jump"
+    },
+    {
+      char: "🐻", name: "加拿大小熊",
+      question: '小熊举着 "Canada" 牌子问："我是来自哪里的新朋友呀？"',
+      options: ["A. 中国", "B. 加拿大", "C. 英国"],
+      correct: 1,
+      rightVoice: "哇！你记住 Canada 是加拿大啦，超厉害！",
+      wrongVoice: '别着急～"Canada" 就是加拿大，咱们一起念三遍：Canada、Canada、Canada，下次肯定行！',
+      rightAnim: "firework", wrongAnim: "cheerBubble", charAction: "wave"
+    },
+    {
+      char: "🦁", name: "美国小狮子",
+      question: '小狮子戴着 "USA" 徽章问："我的祖国是哪个国家呀？"',
+      options: ["A. 美国", "B. 中国", "C. 英国"],
+      correct: 0,
+      rightVoice: "你太聪明啦！USA 是美国记得牢牢的～",
+      wrongVoice: '小提示："USA" 是美国的缩写哦～勇敢再选一次，你能行的！',
+      rightAnim: "crown", wrongAnim: "crownBlink", charAction: "jump"
+    },
+    {
+      char: "🐼", name: "中国熊猫",
+      question: '熊猫抱着竹子说："我来自 China，那 China 是哪个国家呀？"',
+      options: ["A. 加拿大", "B. 中国", "C. 美国"],
+      correct: 1,
+      rightVoice: "完全正确！China 是中国，你是最棒的单词小达人！",
+      wrongVoice: '悄悄告诉你～"China" 就是中国哦～像熊猫爱竹子一样，把这个单词记在心里吧！',
+      rightAnim: "bamboo", wrongAnim: "leaf", charAction: "wave"
+    },
+    {
+      char: "👧", name: "小女孩",
+      question: '小女孩指着镜子说："我是女孩，用哪个单词表示『她』呀？"',
+      options: ["A. he", "B. she", "C. and"],
+      correct: 1,
+      rightVoice: "太厉害啦！she 是她，专门用来指女孩子～",
+      wrongVoice: '小提示：he 是他指男生，she 是她指女生哦～再选一次，你肯定能分清！',
+      rightAnim: "stars", wrongAnim: "waveBoy", charAction: "spin"
+    },
+    {
+      char: "🧒", name: "小学生",
+      question: '教室里，穿校服的小朋友问："我们在学校里是学生，用哪个单词呀？"',
+      options: ["A. teacher", "B. student", "C. friend"],
+      correct: 1,
+      rightVoice: "答对啦！student 是学生，你在学校也是 student 呀～",
+      wrongVoice: '小提示：teacher 是老师，friend 是朋友，student 才是学生哦～再试试，马上就能掌握！',
+      rightAnim: "firework", wrongAnim: "teacherSmile", charAction: "wave"
+    },
+    {
+      char: "👦", name: "新来的小男孩",
+      question: '操场上，新来的小男孩问："我是男孩，而且刚来学校，用哪两个单词描述我呀？"',
+      options: ["A. girl 和 new", "B. boy 和 new", "C. boy 和 friend"],
+      correct: 1,
+      rightVoice: "完美！boy 是男孩，new 是新的，你一下就选对啦～",
+      wrongVoice: '小提示：girl 是女孩，friend 是朋友，boy 是男孩，new 是新的～再组合一下，你能找到正确答案！',
+      rightAnim: "run", wrongAnim: "handHold", charAction: "run"
+    },
+    {
+      char: "🧚", name: "日历精灵",
+      question: '日历精灵举着"今天"的牌子问："今天用哪个英语单词表示呀？"',
+      options: ["A. today", "B. tomorrow", "C. yesterday"],
+      correct: 0,
+      rightVoice: "太棒啦！today 是今天，你把时间单词也拿下啦～",
+      wrongVoice: '小提示：tomorrow 是明天，yesterday 是昨天，today 才是今天哦～再选一次，时间小管家就是你！',
+      rightAnim: "confetti", wrongAnim: "clock", charAction: "spin"
+    },
+    {
+      char: "🤝", name: "新朋友",
+      question: '新朋友见面时，对方说 "Nice to meet you."，这句话是什么意思呀？',
+      options: ["A. 很高兴见到你。", "B. 你来自哪里？", "C. 我是一名学生。"],
+      correct: 0,
+      rightVoice: "完全正确！这是见面时的礼貌用语，你已经学会用英语打招呼啦～",
+      wrongVoice: '小提示：Where are you from? 是你来自哪里？I\'m a student. 是我是一名学生。Nice to meet you. 是很高兴见到你。再读一遍句子，答案就藏在里面哦！',
+      rightAnim: "firework", wrongAnim: "smileBlink", charAction: "wave"
+    },
+    {
+      char: "🐾", name: "全体小动物",
+      question: '如果你想说 "我来自中国"，应该用哪个句子呀？',
+      options: ["A. I'm from China.", "B. I'm from the UK.", "C. I'm from Canada."],
+      correct: 0,
+      rightVoice: "恭喜你通关啦！I'm from 加国名这个句型你掌握得超棒，继续加油成为英语小超人！",
+      wrongVoice: '小提示：the UK 是英国，Canada 是加拿大，China 是中国～把国名和句型对应起来，再选一次，胜利就在眼前！',
+      rightAnim: "trophy", wrongAnim: "starsAround", charAction: "cheer"
+    }
+  ];
+
+  // ========== 游戏状态 ==========
+  let currentLevel = 0;
+  let score = 0;
+  let answered = false;
+
+  // DOM 元素
+  const startScreen = document.getElementById("startScreen");
+  const levelScreen = document.getElementById("levelScreen");
+  const winScreen = document.getElementById("winScreen");
+  const startBtn = document.getElementById("startBtn");
+  const nextBtn = document.getElementById("nextBtn");
+  const nextBtnArea = document.getElementById("nextBtnArea");
+  const restartBtn = document.getElementById("restartBtn");
+  const character = document.getElementById("character");
+  const characterName = document.getElementById("characterName");
+  const questionBubble = document.getElementById("questionBubble");
+  const optionsArea = document.getElementById("optionsArea");
+  const feedback = document.getElementById("feedback");
+  const scoreText = document.getElementById("scoreText");
+  const levelText = document.getElementById("levelText");
+  const progressFill = document.getElementById("progressFill");
+  const animationArea = document.getElementById("animationArea");
+  const finalScore = document.getElementById("finalScore");
+  const cheerChars = document.getElementById("cheerChars");
+
+  // ========== 语音播报 (Web Speech API) ==========
+  function speak(text) {
+    if (!("speechSynthesis" in window)) return;
+    try {
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = "zh-CN";
+      utter.rate = 0.95;
+      utter.pitch = 1.2;
+      utter.volume = 1;
+      // 尽量选中文语音
+      const voices = window.speechSynthesis.getVoices();
+      const zhVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith("zh"));
+      if (zhVoice) utter.voice = zhVoice;
+      window.speechSynthesis.speak(utter);
+    } catch (e) { /* 不影响游戏 */ }
+  }
+
+  // 确保 voices 列表加载
+  if ("speechSynthesis" in window) {
+    window.speechSynthesis.onvoiceschanged = () => {};
+  }
+
+  // ========== 游戏主逻辑 ==========
+  startBtn.addEventListener("click", () => {
+    startScreen.style.display = "none";
+    levelScreen.classList.add("active");
+    loadLevel(currentLevel);
+    speak("欢迎来到单词闯关，让我们开始吧！");
+  });
+
+  restartBtn.addEventListener("click", () => {
+    currentLevel = 0;
+    score = 0;
+    updateScore();
+    winScreen.classList.remove("active");
+    startScreen.style.display = "block";
+    startScreen.style.animation = "fadeIn 0.5s ease";
+  });
+
+  nextBtn.addEventListener("click", () => {
+    currentLevel++;
+    if (currentLevel >= levels.length) {
+      showWinScreen();
+    } else {
+      loadLevel(currentLevel);
+    }
+  });
+
+  function loadLevel(idx) {
+    const lv = levels[idx];
+    answered = false;
+    levelText.textContent = (idx + 1) + "/" + levels.length;
+    progressFill.style.width = ((idx) / levels.length * 100) + "%";
+    character.textContent = lv.char;
+    character.className = "character";
+    characterName.textContent = lv.name;
+    questionBubble.textContent = lv.question;
+    feedback.textContent = "";
+    feedback.className = "feedback";
+    nextBtnArea.classList.remove("show");
+    clearAnimations();
+
+    // 生成选项
+    optionsArea.innerHTML = "";
+    lv.options.forEach((opt, i) => {
+      const btn = document.createElement("button");
+      btn.className = "option-btn";
+      btn.innerHTML = `<span class="option-letter">${opt.charAt(0)}</span><span>${opt.substring(3)}</span>`;
+      btn.addEventListener("click", () => handleAnswer(i, btn));
+      optionsArea.appendChild(btn);
+    });
+  }
+
+  function handleAnswer(selectedIdx, btnEl) {
+    if (answered) return; // 答对后锁定
+    const lv = levels[currentLevel];
+
+    if (selectedIdx === lv.correct) {
+      // ========== 答对 ==========
+      answered = true;
+      score += 10;
+      updateScore();
+      btnEl.classList.add("correct");
+      // 禁用全部按钮
+      document.querySelectorAll(".option-btn").forEach(b => b.disabled = true);
+
+      feedback.textContent = "🎉 答对啦！+10 ⭐";
+      feedback.className = "feedback correct";
+
+      // 角色动作
+      applyCharAction(lv.charAction);
+
+      // 正确动画
+      runRightAnim(lv.rightAnim);
+
+      // 语音
+      speak(lv.rightVoice);
+
+      // 显示下一关按钮
+      setTimeout(() => {
+        nextBtn.textContent = (currentLevel === levels.length - 1) ? "🏆 查看通关" : "下一关 ➡️";
+        nextBtnArea.classList.add("show");
+        progressFill.style.width = ((currentLevel + 1) / levels.length * 100) + "%";
+      }, 1500);
+
+    } else {
+      // ========== 答错 ==========
+      btnEl.classList.add("wrong");
+      feedback.textContent = "💡 再想想哦～";
+      feedback.className = "feedback wrong";
+      runWrongAnim(lv.wrongAnim);
+      speak(lv.wrongVoice);
+      // 1秒后移除错误样式，允许重新选
+      setTimeout(() => {
+        btnEl.classList.remove("wrong");
+      }, 1200);
+    }
+  }
+
+  function updateScore() {
+    scoreText.textContent = score;
+  }
+
+  function applyCharAction(action) {
+    const clsMap = {
+      jump: "char-jump", wave: "char-wave", spin: "char-spin",
+      run: "char-run", cheer: "char-cheer"
+    };
+    const cls = clsMap[action];
+    if (cls) {
+      character.classList.add(cls);
+      setTimeout(() => character.classList.remove(cls), 1800);
+    }
+  }
+
+  function showWinScreen() {
+    levelScreen.classList.remove("active");
+    winScreen.classList.add("active");
+    finalScore.textContent = score;
+    cheerChars.innerHTML = "🐱 🐻 🦁 🐼 👧 🧒 👦 🧚 🤝 🌟";
+    // 彩纸庆祝
+    for (let i = 0; i < 40; i++) runConfetti(Math.random() * window.innerWidth, 0, true);
+    speak("恭喜你通关啦，你真是英语小超人！继续加油哦！");
+  }
+
+  // ========== 动画生成工具 ==========
+  function clearAnimations() { animationArea.innerHTML = ""; }
+
+  function rand(min, max) { return Math.random() * (max - min) + min; }
+  function randColor() {
+    const colors = ["#ff7675", "#fd79a8", "#fdcb6e", "#55efc4", "#74b9ff", "#a29bfe", "#00b894", "#e17055"];
+    return colors[Math.floor(Math.random() * colors.length)];
+  }
+
+  function spawnElement(html, left, top) {
+    const div = document.createElement("div");
+    if (html && html.startsWith && html.startsWith("<")) {
+      div.innerHTML = html;
+      div = div.firstChild;
+    } else {
+      div.textContent = html;
+    }
+    div.style.left = left + "px";
+    div.style.top = top + "px";
+    animationArea.appendChild(div);
+    setTimeout(() => div.remove(), 2500);
+    return div;
+  }
+
+  // ---- 答对动画 ----
+  function runRightAnim(type) {
+    const rect = animationArea.getBoundingClientRect();
+    const cx = rect.width / 2;
+    const cy = rect.height / 3;
+
+    if (type === "stars") {
+      // 金色星星
+      for (let i = 0; i < 12; i++) {
+        const s = document.createElement("span");
+        s.className = "gold-star";
+        s.textContent = "⭐";
+        s.style.left = cx + "px";
+        s.style.top = cy + "px";
+        s.style.setProperty("--tx", rand(-250, 250) + "px");
+        s.style.setProperty("--ty", rand(-200, 100) + "px");
+        animationArea.appendChild(s);
+        setTimeout(() => s.remove(), 1600);
+      }
+    } else if (type === "firework") {
+      // 彩色烟花
+      for (let i = 0; i < 20; i++) {
+        const f = document.createElement("div");
+        f.className = "firework";
+        f.style.background = randColor();
+        f.style.left = cx + "px";
+        f.style.top = cy + "px";
+        const angle = (Math.PI * 2 * i) / 20;
+        const dist = rand(120, 250);
+        f.style.setProperty("--tx", Math.cos(angle) * dist + "px");
+        f.style.setProperty("--ty", Math.sin(angle) * dist + "px");
+        animationArea.appendChild(f);
+        setTimeout(() => f.remove(), 1300);
+      }
+    } else if (type === "crown") {
+      // 皇冠弹出
+      const c = document.createElement("div");
+      c.className = "crown-float";
+      c.textContent = "👑";
+      c.style.left = (cx - 30) + "px";
+      c.style.top = (cy - 80) + "px";
+      animationArea.appendChild(c);
+      setTimeout(() => c.remove(), 1600);
+    } else if (type === "bamboo") {
+      // 竹子生长
+      for (let i = 0; i < 3; i++) {
+        const b = document.createElement("span");
+        b.className = "bamboo-grow";
+        b.textContent = "🎋";
+        b.style.left = (cx + rand(-80, 80)) + "px";
+        animationArea.appendChild(b);
+        setTimeout(() => b.remove(), 1800);
+      }
+    } else if (type === "run") {
+      // 跑步小人
+      const r = document.createElement("span");
+      r.style.position = "absolute";
+      r.style.left = "10%";
+      r.style.top = cy + "px";
+      r.style.fontSize = "70px";
+      r.textContent = "🏃";
+      r.style.animation = "runAcross 1.5s ease";
+      animationArea.appendChild(r);
+      setTimeout(() => r.remove(), 1600);
+    } else if (type === "confetti") {
+      for (let i = 0; i < 25; i++) runConfetti(cx + rand(-200, 200), 0, false);
+    } else if (type === "trophy") {
+      // 奖杯发光 + 大彩纸
+      for (let i = 0; i < 50; i++) runConfetti(rand(0, rect.width), 0, false);
+      for (let i = 0; i < 8; i++) {
+        const s = document.createElement("span");
+        s.className = "gold-star";
+        s.textContent = "⭐";
+        s.style.left = rand(0, rect.width) + "px";
+        s.style.top = rand(0, rect.height) + "px";
+        s.style.setProperty("--tx", rand(-50, 50) + "px");
+        s.style.setProperty("--ty", rand(-50, 50) + "px");
+        animationArea.appendChild(s);
+        setTimeout(() => s.remove(), 2000);
+      }
+    }
+  }
+
+  function runConfetti(x, y, big) {
+    const c = document.createElement("div");
+    c.className = "confetti";
+    c.style.background = randColor();
+    c.style.left = x + "px";
+    c.style.top = y + "px";
+    if (big) { c.style.width = "16px"; c.style.height = "16px"; }
+    c.style.setProperty("--tx", rand(-80, 80) + "px");
+    animationArea.appendChild(c);
+    setTimeout(() => c.remove(), 2200);
+  }
+
+  // ---- 答错动画 ----
+  function runWrongAnim(type) {
+    const rect = animationArea.getBoundingClientRect();
+    const cx = rect.width / 2;
+    const cy = rect.height / 3;
+
+    if (type === "hearts") {
+      for (let i = 0; i < 8; i++) {
+        const h = document.createElement("span");
+        h.className = "heart-pop";
+        h.textContent = "❤️";
+        h.style.left = cx + "px";
+        h.style.top = cy + "px";
+        h.style.setProperty("--tx", rand(-150, 150) + "px");
+        h.style.setProperty("--ty", rand(-150, 50) + "px");
+        animationArea.appendChild(h);
+        setTimeout(() => h.remove(), 1600);
+      }
+    } else if (type === "cheerBubble") {
+      const b = document.createElement("div");
+      b.className = "cheer-bubble";
+      b.textContent = "加油鸭！💪";
+      b.style.left = (cx - 70) + "px";
+      b.style.top = (cy - 50) + "px";
+      animationArea.appendChild(b);
+      setTimeout(() => b.remove(), 1600);
+    } else if (type === "crownBlink") {
+      for (let i = 0; i < 3; i++) {
+        setTimeout(() => {
+          const c = document.createElement("div");
+          c.className = "crown-float";
+          c.textContent = "👑";
+          c.style.left = (cx - 30) + "px";
+          c.style.top = (cy - 80) + "px";
+          animationArea.appendChild(c);
+          setTimeout(() => c.remove(), 900);
+        }, i * 300);
+      }
+      const tip = document.createElement("div");
+      tip.className = "cheer-bubble";
+      tip.textContent = "再试一次！🌟";
+      tip.style.left = (cx - 80) + "px";
+      tip.style.top = (cy + 20) + "px";
+      animationArea.appendChild(tip);
+      setTimeout(() => tip.remove(), 1600);
+    } else if (type === "leaf") {
+      for (let i = 0; i < 10; i++) {
+        const l = document.createElement("span");
+        l.className = "leaf-fall";
+        l.textContent = "🍃";
+        l.style.left = rand(0, rect.width) + "px";
+        l.style.top = "0px";
+        l.style.setProperty("--tx", rand(-100, 100) + "px");
+        animationArea.appendChild(l);
+        setTimeout(() => l.remove(), 2100);
+      }
+    } else if (type === "waveBoy") {
+      const b = document.createElement("span");
+      b.style.position = "absolute";
+      b.style.left = (cx + 80) + "px";
+      b.style.top = cy + "px";
+      b.style.fontSize = "70px";
+      b.textContent = "👦";
+      b.style.animation = "waveHand 0.4s ease 4";
+      b.style.transformOrigin = "bottom center";
+      animationArea.appendChild(b);
+      setTimeout(() => b.remove(), 1800);
+    } else if (type === "teacherSmile") {
+      const t = document.createElement("span");
+      t.style.position = "absolute";
+      t.style.left = (cx + 60) + "px";
+      t.style.top = cy + "px";
+      t.style.fontSize = "80px";
+      t.textContent = "👩‍🏫";
+      t.style.animation = "waveHand 0.4s ease 4";
+      animationArea.appendChild(t);
+      setTimeout(() => t.remove(), 1800);
+    } else if (type === "handHold") {
+      const h = document.createElement("span");
+      h.style.position = "absolute";
+      h.style.left = (cx - 50) + "px";
+      h.style.top = cy + "px";
+      h.style.fontSize = "90px";
+      h.textContent = "🧒🤝👦";
+      h.style.animation = "characterJump 0.5s ease 3";
+      animationArea.appendChild(h);
+      setTimeout(() => h.remove(), 1800);
+    } else if (type === "clock") {
+      const c = document.createElement("span");
+      c.style.position = "absolute";
+      c.style.left = (cx - 40) + "px";
+      c.style.top = cy + "px";
+      c.style.fontSize = "90px";
+      c.textContent = "🕐";
+      c.style.animation = "spinCircle 1.5s ease";
+      animationArea.appendChild(c);
+      setTimeout(() => c.remove(), 1600);
+    } else if (type === "smileBlink") {
+      for (let i = 0; i < 6; i++) {
+        const s = document.createElement("span");
+        s.className = "heart-pop";
+        s.textContent = "😊";
+        s.style.left = cx + "px";
+        s.style.top = cy + "px";
+        s.style.setProperty("--tx", rand(-180, 180) + "px");
+        s.style.setProperty("--ty", rand(-100, 80) + "px");
+        animationArea.appendChild(s);
+        setTimeout(() => s.remove(), 1600);
+      }
+    } else if (type === "starsAround") {
+      for (let i = 0; i < 15; i++) {
+        const s = document.createElement("span");
+        s.className = "gold-star";
+        s.textContent = "✨";
+        s.style.left = rand(0, rect.width) + "px";
+        s.style.top = rand(0, rect.height) + "px";
+        s.style.setProperty("--tx", rand(-50, 50) + "px");
+        s.style.setProperty("--ty", rand(-50, 50) + "px");
+        animationArea.appendChild(s);
+        setTimeout(() => s.remove(), 1800);
+      }
+    }
+  }
+
+  // 初始化
+  updateScore();
+</script>
+
+</body>
+</html>
